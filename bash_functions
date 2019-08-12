@@ -121,6 +121,37 @@ function apt-history(){
               ;;
       esac
       }
+ ################################### 
+      # apt-add-repository with automatic install/upgrade of the desired package
+		# Usage: aar ppa:xxxxxx/xxxxxx [packagename]
+		# If packagename is not given as 2nd argument the function will ask for it and guess the default by taking
+		# the part after the / from the ppa name which is sometimes the right name for the package you want to install
+aar() {
+	about 'apt-add-repository with automatic install/upgrade of the desired package'
+	group 'misc'
+	param '1: The ppa URL'
+	param '2: Package name'
+	example '$ aar ppa:xxxxxx/xxxxxx [packagename]'
+	if [[ -z $1 ]]
+		then
+			reference aar
+	else
+		if [ -n "$2" ]; then
+			PACKAGE=$2
+		else
+			read "PACKAGE?Type in the package name to install/upgrade with this ppa [${1##*/}]: "
+		fi
+		
+		if [ -z "$PACKAGE" ]; then
+			PACKAGE=${1##*/}
+		fi
+		
+		sudo apt-add-repository $1 && sudo $APT update
+		sudo $APT install $PACKAGE
+	fi
+}
+
+
       
 ###################
 # Get weather
