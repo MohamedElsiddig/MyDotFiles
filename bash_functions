@@ -127,11 +127,11 @@ function apt-history(){
 		# If packagename is not given as 2nd argument the function will ask for it and guess the default by taking
 		# the part after the / from the ppa name which is sometimes the right name for the package you want to install
 aar() {
-	about 'apt-add-repository with automatic install/upgrade of the desired package'
-	group 'misc'
-	param '1: The ppa URL'
-	param '2: Package name'
-	example '$ aar ppa:xxxxxx/xxxxxx [packagename]'
+	#about 'apt-add-repository with automatic install/upgrade of the desired package'
+	#group 'misc'
+	#param '1: The ppa URL'
+	#param '2: Package name'
+	#example '$ aar ppa:xxxxxx/xxxxxx [packagename]'
 	if [[ -z $1 ]]
 		then
 			reference aar
