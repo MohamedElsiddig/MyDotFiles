@@ -143,46 +143,6 @@ man() {
     LESS_TERMCAP_us=$(printf "\e[1;33m") \
     man "$@"
 }
-#############################
-# Open filetype
-# Finds every file in folder whose extension starts with the first parameter passed
-# if more than one file of given type is found, it offers a menu
-oft () {
-  if [[ $# == 0 ]]; then
-    echo -n "Enter an extension or partial extension: "
-    read extension
-  fi
-  if [[ $# > 1 ]]; then
-    echo "Usage: oft [(partial) file extension]"
-    return
-  fi
-  extension=$1
-
-  ls *.*$extension* > /dev/null
-  if [[ $? == 1 ]]; then
-    echo "No files matching \"$extension\" found."
-    return
-  fi
-  declare -a fileList=( *\.*$extension* )
-
-  if [[ ${#fileList[*]} -gt 1 ]]; then
-    IFS=$'\n'
-    PS3='Open which file? '
-    select OPT in "Cancel" ${fileList[*]} "Open ALL"; do
-      if [ $OPT == "Open ALL" ]; then
-        read -n1 -p "Open all matching files? (y/N): "
-        [[ $REPLY = [Yy] ]] && $(/usr/bin/xdg-open  ${fileList[*]})
-      elif [ $OPT != "Cancel" ]; then
-        $(/usr/bin/xdg-open  "$OPT")
-      fi
-      unset IFS
-      break
-    done
-  else
-    $(/usr/bin/xdg-open "${fileList[0]}")
-  fi
-}
-
 #########################
 # Creates executable bash script, or just changes modifiers to
 # executable, if file already exists.
@@ -304,54 +264,4 @@ wirelessNetworksInRange() {
     | sed 's/\/70 Signal level=-[0-9]* dBm Encryption key:/ /g' \
     | sed 's/ ESSID:/ /g'
 }
-#############################
-#List all functions in .bash_functions file
-lstfunc(){
-  function_name=$1
-  
-  grep -v '^ ' ~/.bash_functions | sed -n -e '/^.*'"$function_name"'(){/ p' -e '/^.*'"$function_name"'() {/ p'
-}
-#########################
-#quicly get cheat sheet to something (eg: cheatsheet bash)
-cheatsheet() {
-    # Cheatsheets https://github.com/chubin/cheat.sh
-    if [ "$1" == "" ]; then
-        echo "Usage ${FUNCNAME[0]} {Someting}"
-        echo "eg: ${FUNCNAME[0]} ls"
-        
-    else
-    	curl -L "https://cheat.sh/$1"
-    fi
-}
 
-##########################
-
-#get cheatsheets from devhints.io website
-
-devhints(){
-type wget >/dev/null 2>&1 || { echo >&2 "I require wget but it's not installed."; exit 1; }
-type bat >/dev/null 2>&1 || { echo >&2 "I require bat but it's not installed."; exit 1; }
-
-TOOL=${1:?Usage: ${FUNCNAME} <toolname> [--refresh]}
-REFRESH=${2:-no}
-
-RAW_MD_URL="https://raw.githubusercontent.com/rstacruz/cheatsheets/master/${TOOL}.md"
-
-CACHE_DIR=$HOME/.hack/
-LOCAL_CACHE_FILE=$CACHE_DIR/${TOOL}.md
-
-if [ ! -d $CACHE_DIR ]; then
-  mkdir -p $CACHE_DIR
-fi
-
-if [ "$REFRESH" == "--refresh" ] || [ ! -e $LOCAL_CACHE_FILE ]; then
-  wget -q -O - $RAW_MD_URL | sed -e '/^{: /d' > $LOCAL_CACHE_FILE
-fi
-
-if [ -s $LOCAL_CACHE_FILE ]; then
-  bat $LOCAL_CACHE_FILE 2>/dev/null
-else
-  echo No cheat sheet found!
-  rm -rf $LOCAL_CACHE_FILE > /dev/null 2>&1
-fi
-}
