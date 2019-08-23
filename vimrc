@@ -8,7 +8,7 @@ call vundle#begin()
 "call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
-Plugin 'luochen1990/rainbow'
+
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'arcticicestudio/nord-vim'
 Plugin 'Yggdroot/indentLine'
@@ -16,6 +16,7 @@ Plugin 'Matt-Deacalion/vim-systemd-syntax'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'bash-support.vim'
+Plugin 'junegunn/rainbow_parentheses.vim'
 "Plugin 'mtdl9/vim-log-highlighting'
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
@@ -40,7 +41,7 @@ set t_Co=256
 set cursorline
 colorscheme onehalfdark
 let g:airline_theme='onehalfdark'
-let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
+
 " lightline
 " let g:lightline.colorscheme='onehalfdark'
 " All of your Plugins must be added before the following line
