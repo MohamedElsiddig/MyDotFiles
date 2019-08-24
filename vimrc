@@ -17,6 +17,7 @@ Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'bash-support.vim'
 Plugin 'junegunn/rainbow_parentheses.vim'
+Plugin 'Valloric/YouCompleteMe'
 "Plugin 'mtdl9/vim-log-highlighting'
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
@@ -41,7 +42,9 @@ set t_Co=256
 set cursorline
 colorscheme onehalfdark
 let g:airline_theme='onehalfdark'
-
+let g:rainbow#max_level = 16
+let g:rainbow#pairs = [['(', ')'], ['[', ']']]
+let g:ycm_use_clangd = 0
 " lightline
 " let g:lightline.colorscheme='onehalfdark'
 " All of your Plugins must be added before the following line
