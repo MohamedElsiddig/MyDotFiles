@@ -8,7 +8,7 @@ call vundle#begin()
 "call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
-
+Plugin 'luochen1990/rainbow'
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'arcticicestudio/nord-vim'
 Plugin 'Yggdroot/indentLine'
@@ -16,7 +16,7 @@ Plugin 'Matt-Deacalion/vim-systemd-syntax'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'bash-support.vim'
-Plugin 'junegunn/rainbow_parentheses.vim'
+"Plugin 'junegunn/rainbow_parentheses.vim'
 Plugin 'Valloric/YouCompleteMe'
 "Plugin 'mtdl9/vim-log-highlighting'
 " The following are examples of different formats supported.
@@ -42,8 +42,9 @@ set t_Co=256
 set cursorline
 colorscheme onehalfdark
 let g:airline_theme='onehalfdark'
-let g:rainbow#max_level = 16
-let g:rainbow#pairs = [['(', ')'], ['[', ']']]
+"let g:rainbow#max_level = 16
+"let g:rainbow#pairs = [['(', ')'], ['[', ']']]
+let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
 let g:ycm_use_clangd = 0
 " lightline
 " let g:lightline.colorscheme='onehalfdark'
@@ -61,6 +62,8 @@ filetype plugin indent on    " required
 	"
 	" see :h vundle for more details or wiki for FAQ
 	" Put your non-Plugin stuff after this line
+
+
 
 if exists('+termguicolors')
   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
