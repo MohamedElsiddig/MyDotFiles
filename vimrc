@@ -47,7 +47,8 @@ set t_Co=256
 set cursorline
 "colorscheme papaya
 "let g:airline_theme='onehalfdark'
-"
+let g:airline_theme='material'
+
 "+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ""Vim-Material Theme settings
