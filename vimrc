@@ -11,6 +11,7 @@ call vundle#begin()
 
 "Plugin 'maralla/completor.vim'
 Plugin 'hzchirs/vim-material'
+Plugin 'kaicataldo/material.vim'
 Plugin 'henrynewcomer/vim-theme-papaya'
 Plugin 'luochen1990/rainbow'
 Plugin 'VundleVim/Vundle.vim'
@@ -47,7 +48,7 @@ set t_Co=256
 set cursorline
 "colorscheme papaya
 "let g:airline_theme='onehalfdark'
-let g:airline_theme='material'
+"let g:airline_theme='material'
 
 "+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -55,13 +56,13 @@ let g:airline_theme='material'
 
 " Dark
 "
-set background=dark
+"set background=dark
 "colorscheme vim-material
 
 
 " Palenight
 
-let g:material_style='palenight'
+"let g:material_style='palenight'
 "set background=dark
 "colorscheme vim-material
 
@@ -71,7 +72,15 @@ let g:material_style='palenight'
 "set background=dark
 "colorscheme vim-material
 
+"----------------------------------------------
+"material theme settings
 
+"let g:material_theme_style = 'default' | 'palenight' | 'ocean' | 'lighter' | 'darker'
+
+let g:material_terminal_italics = 0
+let g:material_theme_style = 'ocean'
+
+"----------------------------------------------
 
 "let g:rainbow#max_level = 16
 "let g:rainbow#pairs = [['(', ')'], ['[', ']']]
@@ -83,9 +92,12 @@ let g:ycm_use_clangd = 0
 " let g:lightline.colorscheme='onehalfdark'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
+
 "colorscheme papaya
 "colorscheme onehalfdark
-colorscheme vim-material
+"colorscheme vim-material
+colorscheme material
+
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
 	"filetype plugin on
@@ -100,12 +112,15 @@ filetype plugin indent on    " required
 	" Put your non-Plugin stuff after this line
 
 
-
-if exists('+termguicolors')
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+if (has('termguicolors'))
   set termguicolors
-endif	" 
+endif
+
+"if exists('+termguicolors')
+ " let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  "let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  "set termguicolors
+"endif	" 
 "if (has("termguicolors"))
  " set termguicolors
 "endif
