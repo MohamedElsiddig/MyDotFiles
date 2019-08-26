@@ -46,7 +46,9 @@ let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 syntax on
 set t_Co=256
 set cursorline
-"colorscheme papaya
+
+"airline themes change status/tabline for vim
+
 "let g:airline_theme='onehalfdark'
 "let g:airline_theme='material'
 
