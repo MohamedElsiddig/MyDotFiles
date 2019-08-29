@@ -163,7 +163,7 @@ endif
 "------------------------------------------------
 
 "NerdTree settings
-"
+"NerdTree git status settings
 let g:NERDTreeIndicatorMapCustom = {
     \ "Modified"  : "✹",
     \ "Staged"    : "✚",
