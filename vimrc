@@ -10,7 +10,9 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 
 "Plugin 'maralla/completor.vim'
+Plugin 'jiangmiao/auto-pairs'
 Plugin 'hzchirs/vim-material'
+Plugin 'ryanoasis/vim-devicons'
 Plugin 'kaicataldo/material.vim'
 Plugin 'henrynewcomer/vim-theme-papaya'
 Plugin 'luochen1990/rainbow'
@@ -163,7 +165,7 @@ endif
 "------------------------------------------------
 
 "NerdTree settings
-"NerdTree git status settings
+"
 let g:NERDTreeIndicatorMapCustom = {
     \ "Modified"  : "✹",
     \ "Staged"    : "✚",
