@@ -302,7 +302,7 @@ bleopt complete_auto_delay=100
 # ble-color-setface region_target             fg=black,bg=153
 # ble-color-setface disabled                  fg=242
 # ble-color-setface overwrite_mode            fg=black,bg=51
- ble-color-setface auto_complete             fg=73,italic,bg=transparent
+ ble-color-setface auto_complete             fg=242,italic,bg=transparent
 # ble-color-setface menu_filter_fixed         bold
 # ble-color-setface menu_filter_input         fg=16,bg=229
 # ble-color-setface vbell                     reverse
