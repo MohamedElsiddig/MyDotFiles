@@ -314,7 +314,7 @@ bleopt complete_auto_delay=100
 # ble-color-setface syntax_quoted             fg=green
 # ble-color-setface syntax_quotation          fg=green,bold
 # ble-color-setface syntax_expr               fg=navy
-# ble-color-setface syntax_error              bg=203,fg=231 # bg=224
+ ble-color-setface syntax_error              bg=transparent,fg=203,bold # bg=224
 # ble-color-setface syntax_varname            fg=202
 # ble-color-setface syntax_delimiter          bold
 # ble-color-setface syntax_param_expansion    fg=purple
