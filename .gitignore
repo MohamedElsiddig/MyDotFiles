@@ -1,3 +1,5 @@
 vim/
+!/vim/autoload
+!/vim/colors
 .gitconfig
 
