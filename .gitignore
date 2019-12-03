@@ -1,5 +1,5 @@
 !/vim/autoload/
 !/vim/colors/
-vim/
+vim/bundle
 .gitconfig
 
