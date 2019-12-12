@@ -1,1 +1,1 @@
-save the dircolors to ~$HOME/.dircolors
+save the dircolors to ~/.dircolors
