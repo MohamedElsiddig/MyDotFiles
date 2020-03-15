@@ -1,0 +1,7 @@
+set smtp-use-starttls
+set ssl-verify=ignore
+set smtp=smtp://smtp.gmail.com:587
+set smtp-auth=login
+set smtp-auth-user=sender_email@gmail.com
+set smtp-auth-password=sender_password
+set from="sender_email@gmail.com"
