@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  ariang:
+    image: hurlenko/aria2-ariang
+    ports:
+      - 8080:8080
+    volumes:
+      - /home/mohamedelsiddig/Downloads/:/aria2/data
+      - /home/mohamedelsiddig/.aria2/:/aria2/conf
+    environment:
+      - PUID=1000
+      - PGID=1000
+      #- RPC_SECRET=secret
+      #- DOMAIN=0.0.0.0:8080
+      #- ARIA2RPCPORT=443
+    restart: always
