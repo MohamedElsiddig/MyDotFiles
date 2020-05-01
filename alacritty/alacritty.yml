@@ -1,0 +1,189 @@
+#
+# Window opacity as a floating point number from `0.0` to `1.0`.
+# The value `0.0` is completely transparent, and `1.0` is opaque.
+background_opacity: 0.8
+font:
+  size: 9.9
+normal:
+    family: SourceCodePro
+    # Style can be specified to pick a specific face.
+    style: Italic
+
+  # The bold font face
+bold:
+    family: Fira Code
+    # Style can be specified to pick a specific face.
+    style: Bold
+
+  # The italic font face
+italic:
+    family: Menlo
+    # Style can be specified to pick a specific face.
+    style: Italic
+  
+  
+  
+# Style of the cursor (changes require restart)
+#
+cursor:
+# Values for 'cursor_style':
+# - Block
+# - Underline
+# - Beam
+  style: Beam
+key_bindings:
+  - { key: V,        mods: Control|Shift,    action: Paste               }
+  - { key: C,        mods: Control|Shift,    action: Copy                }
+## Colors (Ayu Dark)
+#colors:
+#  # Default colors
+#  primary:
+#    background: '#0A0E14'
+#    foreground: '#B3B1AD'
+
+#  # Normal colors
+#  normal:
+#    black: '#01060E'
+#    red: '#EA6C73'
+#    green: '#91B362'
+#    yellow: '#F9AF4F'
+#    blue: '#53BDFA'
+#    magenta: '#FAE994'
+#    cyan: '#90E1C6'
+#    white: '#C7C7C7'
+
+#  # Bright colors
+#  bright:
+#    black: '#686868'
+#    red: '#F07178'
+#    green: '#C2D94C'
+#    yellow: '#FFB454'
+#    blue: '#59C2FF'
+#    magenta: '#FFEE99'
+#    cyan: '#95E6CB'
+#    white: '#FFFFFF'
+#    
+
+
+## Colors (iTerm 2 default theme)
+colors:
+ # Default colors
+ primary:
+   background: '#101421'
+   foreground: '#fffbf6'
+
+ # Normal colors
+ normal:
+   black:   '#2e2e2e'
+   red:     '#eb4129'
+   green:   '#abe047'
+   yellow:  '#f6c744'
+   blue:    '#47a0f3'
+   magenta: '#7b5cb0'
+   cyan:    '#64dbed'
+   white:   '#e5e9f0'
+
+ # Bright colors
+ bright:
+   black:   '#565656'
+   red:     '#ec5357'
+   green:   '#c0e17d'
+   yellow:  '#f9da6a'
+   blue:    '#49a4f8'
+   magenta: '#a47de9'
+   cyan:    '#99faf2'
+   white:   '#ffffff'
+
+
+
+##Colors (challenger-deep)
+#colors:
+#  # Default colors
+#  primary:
+#    background: '0x1b182c'
+#    foreground: '0xcbe3e7'
+
+#  # Normal colors
+#  normal:
+#    black:   '0x100e23'
+#    red:     '0xff8080'
+#    green:   '0x95ffa4'
+#    yellow:  '0xffe9aa'
+#    blue:    '0x91ddff'
+#    magenta: '0xc991e1'
+#    cyan:    '0xaaffe4'
+#    white:   '0xcbe3e7'
+
+#  # Bright colors
+#  bright:
+#    black:   '0x565575'
+#    red:     '0xff5458'
+#    green:   '0x62d196'
+#    yellow:  '0xffb378'
+#    blue:    '0x65b2ff'
+#    magenta: '0x906cff'
+#    cyan:    '0x63f2f1'
+#    white:   '0xa6b3cc'
+#    
+#
+
+    
+## Colors (Material Theme)
+#colors:
+#  # Default colors
+#  primary:
+#    background: '#1e282d'
+#    foreground: '#c4c7d1'
+
+#  # Normal colors
+#  normal:
+#    black:   '#666666'
+#    red:     '#eb606b'
+#    green:   '#c3e88d'
+#    yellow:  '#f7eb95'
+#    blue:    '#80cbc4'
+#    magenta: '#ff2f90'
+#    cyan:    '#aeddff'
+#    white:   '#ffffff'
+
+#  # Bright colors
+#  bright:
+#    black:   '#ff262b'
+#    red:     '#eb606b'
+#    green:   '#c3e88d'
+#    yellow:  '#f7eb95'
+#    blue:    '#7dc6bf'
+#    magenta: '#6c71c4'
+#    cyan:    '#35434d'
+#    white:   '#ffffff'
+#  
+
+  
+## Colors (Monokai Pro)
+#colors:
+#  # Default colors
+#  primary:
+#    background: '#2D2A2E'
+#    foreground: '#FCFCFA'
+
+#  # Normal colors
+#  normal:
+#    black:   '#403E41'
+#    red:     '#FF6188'
+#    green:   '#A9DC76'
+#    yellow:  '#FFD866'
+#    blue:    '#FC9867'
+#    magenta: '#AB9DF2'
+#    cyan:    '#78DCE8'
+#    white:   '#FCFCFA'
+
+#  # Bright colors
+#  bright:
+#    black:   '#727072'
+#    red:     '#FF6188'
+#    green:   '#A9DC76'
+#    yellow:  '#FFD866'
+#    blue:    '#FC9867'
+#    magenta: '#AB9DF2'
+#    cyan:    '#78DCE8'
+#    white:   '#FCFCFA' 
