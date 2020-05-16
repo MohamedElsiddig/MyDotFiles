@@ -27,7 +27,8 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 "Plugin 'shougo/deoplete.nvim'
 "Plugin 'junegunn/rainbow_parentheses.vim'
-Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Valloric/YouCompleteMe'
+Plugin 'morhetz/gruvbox'
 Plugin 'mtdl9/vim-log-highlighting'
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
@@ -55,7 +56,7 @@ set cursorline
 
 "let g:airline_theme='onehalfdark'
 "let g:airline_theme='material'
-
+let g:airline_theme = 'gruvbox'
 "+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ""Vim-Material Theme settings
@@ -83,8 +84,8 @@ set cursorline
 
 "let g:material_theme_style = 'default' | 'palenight' | 'ocean' | 'lighter' | 'darker'
 
-let g:material_terminal_italics = 0
-let g:material_theme_style = 'ocean'
+"let g:material_terminal_italics = 0
+"let g:material_theme_style = 'ocean'
 
 "----------------------------------------------
 
@@ -102,7 +103,9 @@ call vundle#end()            " required
 "colorscheme papaya
 "colorscheme onehalfdark
 "colorscheme vim-material
-colorscheme material
+"colorscheme material
+colorscheme gruvbox
+
 
 filetype plugin indent on    " required
 " To ignore plugin indent changes, instead use:
