@@ -1,0 +1,45 @@
+{
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.colorTheme": "Gruvbox Material Dark",
+    "window.zoomLevel": -1,
+    "editor.fontFamily": "'Fira Code iScript','Cascadia Code','Source Code Pro','Firra Flott','Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
+    "editor.fontLigatures": true,
+
+"editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": [
+          //following will be in italic (=FlottFlott)
+          "keyword.control",
+          "variable.language",
+          "support.function",
+          "entity.name.function",
+          "comment",
+          "entity.name.type.class", //class names
+          "keyword", //import, export, return…
+          "constant", //String, Number, Boolean…, this, super
+          "storage.modifier", //static keyword
+          "storage.type.class.js", //class keyword
+        ],
+        "settings": {
+          "fontStyle": "italic bold"
+        }
+      },
+      {
+        "scope": [
+          //following will be excluded from italics (VSCode has some defaults for italics)
+          "invalid",
+          "keyword.operator",
+          "constant.numeric.css",
+          "keyword.other.unit.px.css",
+          "constant.numeric.decimal.js",
+          "constant.numeric.json"
+        ],
+        "settings": {
+          "fontStyle": ""
+        }
+      }
+    ]
+},
+"files.autoSave": "afterDelay"
+}
