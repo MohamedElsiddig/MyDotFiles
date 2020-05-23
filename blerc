@@ -28,9 +28,16 @@
 #bleopt input_encoding=UTF-8
 
 
-## The following setting specifies the pager used by ble.sh.
+## The following setting specifies the pager used by ble.sh.  This is used to
+## show the help of commands (f1).
 
 #bleopt pager=less
+
+## The following setting specifies the editor used by ble.sh.  This is used for
+## the widget edit-and-execute (C-x C-e) and editor for a large amount of
+## command line texts.  Possible values are e.g. "vim", "emacs -nw" or "nano".
+
+#bleopt editor=vim
 
 
 ## The following settings sets the behavior of visible bells (vbell).
@@ -86,21 +93,40 @@
 #bleopt undo_point=end
 
 
-## The following settings controls forced layout calculations before
-## graphical operations. When a non-empty value is specified, the forced
-## calculations are enabled. When an empty string is set, the operations are
-## switched to logical ones.
+## The following setting controls forced layout calculations before
+## graphical operations. When a non-empty value is specified, the
+## forced calculations are enabled. When an empty string is set, the
+## operations are switched to logical ones.
 
 #bleopt edit_forced_textmap=1
 
 
-## The following settings controls the right prompt. "rps1" specifies the
-## contents of the right prompt in the format of PS1. When "rps1_transient"
-## is set to a non-empty value, the right prompt vanishes when the cursor
-## leaves the current command line.
+## The following settings controls the prompt after the cursor left
+## the command line.  "prompt_ps1_final" contains a prompt string.
+## "prompt_ps1_transient" is a colon-separated list of fields
+## "always", "same-dir" and "trim".  The prompt is replaced by
+## "prompt_ps1_final" if it has a non-empty value.  Otherwise, the
+## prompt is trimmed leaving the last line if "prompt_ps1_transient"
+## has a field "trim".  Otherwise, the prompt vanishes if
+## "prompt_ps1_transient" has a non-empty value.  When
+## "prompt_ps1_transient" contains a field "same-dir", the setting of
+## "prompt_ps1_transient" is effective only when the current working
+## directory did not change since the last command line.
 
-#bleopt rps1='\w'
-#bleopt rps1_transient=''
+#bleopt prompt_ps1_final=
+#bleopt prompt_ps1_transient=trim
+
+
+## The following settings controls the right prompt. "prompt_rps1"
+## specifies the contents of the right prompt in the format of PS1.
+## When the cursor leaves the current command line, the right prompt
+## is replaced by "prompt_rps1_final" if it has a non-empty value, or
+## otherwise, the right prompt vanishes if "prompt_rps1_transient" is
+## set to a non-empty value,
+
+#bleopt prompt_rps1='\w'
+#bleopt prompt_rps1_final=
+#bleopt prompt_rps1_transient=''
 
 
 ## "prompt_eol_mark" specifies the contents of the mark used to indicate the
@@ -143,15 +169,45 @@
 #bleopt history_share=
 
 
-## The following setting controls the behavior of the widget "accept-single-"
-## line-or-newline" in the single-line editing mode. The value is a subject of
-## arithmetic evaluation. When it evaluates to negative integers, the line is
-## always accepted. When it evaluates to 0, it enters the multiline editing
-## mode when there is any unprocessed user inputs, or otherwise the line is
-## accepted. When it evaluates to a positive integer "n", it enters the
-## multiline editing mode when there is more than "n"unprocessed user inputs.
+## The following setting controls the behavior of the widget
+## "accept-single-line-or-newline" in the single-line editing mode. The value
+## is a subject of arithmetic evaluation. When it evaluates to negative
+## integers, the line is always accepted. When it evaluates to 0, it enters the
+## multiline editing mode when there is any unprocessed user inputs, or
+## otherwise the line is accepted. When it evaluates to a positive integer "n",
+## it enters the multiline editing mode when there is more than "n"unprocessed
+## user inputs.
 
 #bleopt accept_line_threshold=5
+
+
+## The following option controls the behavior when the number of characters
+## exceeds the capacity specified by `line_limit_length`.  The value `none`
+## means that the number of characters will not be checked.  The value
+## `discard` means that the characters cannot be inserted when the number of
+## characters exceeds the capacity.  The value `truncate` means that the
+## command line is truncated from its end to fit into the capacity.  The value
+## `editor` means that the widget `edit-and-execute` will be invoked to open an
+## editor to edit the command line contents.
+
+#bleopt line_limit_type=none
+
+
+## The following option specifies the capacity of the command line in the
+## number of characters.  The number 0 or negative numbers means the unlimited
+## capacity.
+
+#bleopt line_limit_length=10000
+
+
+## The following option specifies the maximal number of characters
+## which can be appended into the history.  When this option has a
+## positive value, commands with the length longer than the value is
+## not appended to the history.  When this option has a non-positive
+## value, commands are always appended to the history regardless of
+## their length.
+
+#bleopt history_limit_length=10000
 
 
 ##-----------------------------------------------------------------------------
@@ -187,7 +243,7 @@
 ## When the value "east" is specified, the width is 2. When the value "west"
 ## is specified, the width is 1. When "auto" is specified, "east" or "west"
 ## is automatically selected based on interactions with the terminal. When
-## the value "emacs" is specified, the width table (depending on characaters)
+## the value "emacs" is specified, the width table (depending on characters)
 ## used in Emacs is used.
 
 #bleopt char_width_mode=auto
@@ -266,12 +322,19 @@
 
 
 ## If "complete_contract_function_names" has non-empty values, the function
-## name candidates are grouped by prefices of the directory-like form "*/".
+## name candidates are grouped by prefixes of the directory-like form "*/".
 
 #bleopt complete_contract_function_names=1
 
 
-## If "complete_auto_history" has non-empty values, auto-complete searchs
+## By default, ble.sh does not allow rewriting the existing text if non-unique
+## candidates does not contain the existing text.  If this setting has
+## non-empty values, ble.sh rewrites the existing text.
+
+#bleopt complete_allow_reduction=1
+
+
+## If "complete_auto_history" has non-empty values, auto-complete searches
 ## matching command lines from history.
 
 #bleopt complete_auto_history=1
@@ -280,7 +343,14 @@
 ## The following setting controls the delay of auto-complete after the last
 ## user input. The unit is millisecond.
 
-bleopt complete_auto_delay=100
+#bleopt complete_auto_delay=100
+
+
+## The setting "complete_auto_wordbreaks" is used as the delimiters for
+## identifying words for M-right (auto-complete/insert-word).  The default
+## value is $' \t\n'.  If the empty value is set, the default value is used.
+
+#bleopt complete_auto_wordbreaks=$' \t\n/'
 
 
 ## When there are user inputs while generating completion candidates, the
@@ -320,8 +390,34 @@ bleopt complete_auto_delay=100
 ##-----------------------------------------------------------------------------
 ## Color settings
 
+## The setting "term_index_colors" specifies the number of index colors
+## supported by you terminal.  The value 256 is treated as xterm 256-color
+## palette (16 basic + 6x6x6 color cube + 24 gray scale). The value 88 is
+## treated as xterm 88-color palette (16 basic + 4x4x4 color cube + 8 gray
+## scale).  The value 0 means that the terminal does not support extra colors
+## other than basic colors.
+
+# bleopt term_index_colors=256
+
+
+## The setting "term_true_colors" specifies the format of 24-bit color escape
+## sequences supported by your terminal.  The value "semicolon" indicates the
+## format "CSI 3 8 ; 2 ; R ; G ; B m".  The value "colon" indicates the format
+## "CSI 3 8 : 2 : R : G : B m".  The other value implies that the terminal does
+## not support 24-bit color sequences.  In this case, ble.sh tries to output
+## indexed color sequences or basic color sequences with properly reduced
+## colors.
+
+# bleopt term_true_colors=semicolon
+
+
+## The setting "filename_ls_colors" can be used to import the filename coloring
+## scheme by the environment variable LS_COLORS.
 
 # bleopt filename_ls_colors="$LS_COLORS"
+
+
+## The following settings specify graphic styles of each faces.
 
 # ble-color-setface region                    fg=white,bg=60
 # ble-color-setface region_insert             fg=blue,bg=252
@@ -376,6 +472,15 @@ bleopt complete_auto_delay=100
 # ble-color-setface filename_warning          underline,fg=red
 # ble-color-setface filename_url              underline,fg=blue
 # ble-color-setface filename_ls_colors        underline
+# ble-color-setface varname_array             fg=orange,bold
+# ble-color-setface varname_empty             fg=31
+# ble-color-setface varname_export            fg=200,bold
+# ble-color-setface varname_expr              fg=92,bold
+# ble-color-setface varname_hash              fg=70,bold
+# ble-color-setface varname_number            fg=64
+# ble-color-setface varname_readonly          fg=200
+# ble-color-setface varname_transform         fg=29,bold
+# ble-color-setface varname_unset             fg=124
 
 
 ##-----------------------------------------------------------------------------
@@ -385,9 +490,37 @@ function blerc/vim-load-hook {
   ((_ble_bash>=40300)) && builtin bind 'set keyseq-timeout 1'
 
   # bleopt keymap_vi_macro_depth=64
-  # bleopt keymap_vi_nmap_name:=$'\e[1m~\e[m'
+  # bleopt keymap_vi_mode_string_nmap:=$'\e[1m~\e[m'
 
-  # # keymap settings with Meta modifiers
+
+  ## The setting "keymap_vi_mode_update_prompt" specifies that the
+  ## prompt should be recalculated on the mode change.  When this
+  ## option has a non-empty value, the prompt will be recalculated.
+
+  # bleopt keymap_vi_mode_update_prompt=
+
+
+  ## The option "keymap_vi_mode_show" controls if the mode line is
+  ## shown.  When this option has a non-empty value, the mode line is
+  ## shown.
+
+  # bleopt keymap_vi_mode_show=1
+
+
+  ## The following settings specify the name of modes in the mode
+  ## line.
+
+  # bleopt keymap_vi_mode_name_insert=INSERT
+  # bleopt keymap_vi_mode_name_replace=REPLACE
+  # bleopt keymap_vi_mode_name_vreplace=VREPLACE
+  # bleopt keymap_vi_mode_name_visual=VISUAL
+  # bleopt keymap_vi_mode_name_select=SELECT
+  # bleopt keymap_vi_mode_name_linewise=LINE
+  # bleopt keymap_vi_mode_name_blockwise=BLOCK
+
+
+  ## The following setting setups the keymap settings with Meta
+  ## modifiers
   # ble-decode/keymap:vi_imap/define-meta-bindings
 
   ## Cursor settings
@@ -413,12 +546,16 @@ function blerc/vim-load-hook {
   # bleopt term_vi_cmap=
 
   ## vim-surround
-  # source "$_ble_base/lib/vim-surround.sh"
-  # bleopt vim_surround_45:=$'$( \r )'
-  # bleopt vim_surround_61:=$'$(( \r ))'
+  #source "$_ble_base/lib/vim-surround.sh"
+  #bleopt vim_surround_45:=$'$( \r )'
+  #bleopt vim_surround_61:=$'$(( \r ))'
 
+  ## vim-arpeggio
+  #source "$_ble_base/lib/vim-arpeggio.sh"
+  #bleopt vim_arpeggio_timeoutlen=10
+  #ble/lib/vim-arpeggio.sh/bind -s jk 'hello'
 }
-#blehook/eval-after-load keymap_vi blerc/vim-load-hook
+blehook/eval-after-load keymap_vi blerc/vim-load-hook
 
 ##-----------------------------------------------------------------------------
 ## Internal settings
