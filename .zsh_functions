@@ -1,0 +1,310 @@
+# function Extract for common file formats
+
+SAVEIFS=$IFS
+IFS=$(echo -en "\n\b")
+
+function extract() {
+
+
+		if [ -z "$1" ]; then
+    # display usage if no parameters given
+        
+        echo "'Extract most known archives with one command .'
+		param '1: The file name you want to extract'
+		example '$ extract <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>'
+		example '$ extract <path/file_name_1.ext> [path/file_name_2.ext] [path/file_name_3.ext]'"
+ else
+    for n in "$@"
+    do
+      if [ -f "$n" ] ; then
+          case "${n%,}" in
+            *.cbt|*.tar.bz2|*.tar.gz|*.tar.xz|*.tar.zst|*.tbz2|*.tgz|*.txz|*.tar) 
+                         tar xvf "$n"       ;;
+            *.lzma)      unlzma "$n"      ;;
+            *.bz2)       bunzip2 "$n"     ;;
+            *.cbr|*.rar)       unrar x -ad "$n" ;;
+            *.gz)        gunzip "$n"      ;;
+            *.cbz|*.epub|*.zip|*.apk|*.xapk)       unzip "$n" -d "${n:0:-4}"    ;;
+            *.z)         uncompress "$n"  ;;
+            *.7z|*.arj|*.cab|*.cb7|*.chm|*.deb|*.dmg|*.iso|*.lzh|*.msi|*.pkg|*.rpm|*.udf|*.wim|*.xar)
+                         7z x "$n"        ;;
+            *.xz)        unxz "$n"        ;;
+            *.exe)       cabextract "$n"  ;;
+            *.cpio)      cpio -id < "$n"  ;;
+            *.cba|*.ace)      unace x "$n"      ;;
+            *)
+                         echo "extract: '$n' - unknown archive method"
+                         return 1
+                         ;;
+          esac
+      else
+          echo "'$n' - file does not exist"
+          return 1
+      fi
+    done
+fi
+}
+
+IFS=$SAVEIFS
+
+function mkarchive(){
+		
+	if [[ ! -z $1 ]]
+		then
+			case $1 in
+				  bz2)	tar  cvjf  "$2.tar.bz2" -C "$3" . ;;
+				  tgz)	tar cvzf   "$2.tar.gz" -C "$3" .  ;;
+				  tzstd)	tar --zstd  -cvf "$2.tar.zst" -C "$3" .  ;;
+				  tar)	tar cvf    "$2.tar"   -C "$3" .  ;;
+				  zip)	zip -r "$2".zip "$3" ;;
+				   7z)  7z a -mx=$2 "$3".7z $4 ;;
+				  *)   echo "'Create a compress file form a directory.'
+		param '1: The Compress Method [ zip | tgz | tar | bz2 | 7z | zstd]'
+		param '2: The output file name'
+		param '3: The Directory to compress'
+		example '$ mkarchive zip Shell-scripts ~/Docuoments/Shell-scripts'
+		example '$ mkarchive tgz Shell-scripts ~/Docuoments/Shell-scripts'
+		param '** In the 7z method choose the compression level'
+		example '$ mkarchive 7z [ 1 | 3 | 5 | 7 | 9 ] Shell-scripts ~/Docuoments/Shell-scripts'
+		param   '** Note in 7z 9 considered ultra compression ... the default is 5'" ;;
+				 esac
+     	else
+         	echo "about 'Create a compress file form a directory.'
+		param '1: The Compress Method [ zip | tgz | tar | bz2 | 7z | zstd]'
+		param '2: The output file name'
+		param '3: The Directory to compress'
+		example '$ mkarchive zip Shell-scripts ~/Docuoments/Shell-scripts'
+		example '$ mkarchive tgz Shell-scripts ~/Docuoments/Shell-scripts'
+                '** In the 7z method choose the compression level'
+		example '$ mkarchive 7z [ 1 | 3 | 5 | 7 | 9 ] Shell-scripts ~/Docuoments/Shell-scripts'
+		'** Note in 7z 9 considered ultra compression ... the default is 5'"
+     fi	
+}
+############################
+
+
+# Creates an archive from given directory
+
+function mktar() { tar cvf  "${1%%/}.tar"     "${1%%/}/"; }
+function mktgz() { tar cvzf "${1%%/}.tar.gz"  "${1%%/}/"; }
+function mktbz() { tar cvjf "${1%%/}.tar.bz2" "${1%%/}/"; }
+
+#######################################
+# Makes directory then moves into it
+
+function mkcd {
+    mkdir -p -v $1
+    cd $1
+}
+
+######################
+function up(){
+  local d=""
+  limit=$1
+  for ((i=1 ; i <= limit ; i++))
+    do
+      d=$d/..
+    done
+  d=$(echo $d | sed 's/^\///')
+  if [ -z "$d" ]; then
+    d=..
+  fi
+  cd $d
+}
+
+#########################
+function findend {
+    find . -type f -name \*.${1}
+}
+################################
+
+
+#apt-history
+function apt-history(){
+      case "$1" in
+        install)
+              cat /var/log/dpkg.log | grep 'install'
+              ;;
+        upgrade|remove)
+              cat /var/log/dpkg.log | grep $1
+              ;;
+        rollback)
+              cat /var/log/dpkg.log | grep upgrade | \
+                  grep "$2" -A10000000 | \
+                  grep "$3" -B10000000 | \
+                  awk '{print $4"="$5}'
+              ;;
+        *)
+              cat /var/log/dpkg.log
+              ;;
+      esac
+      }
+      
+###################
+# Get weather
+function weather() {
+  curl -s "wttr.in/$1"
+}
+
+
+#########################
+# converts and saves youtube video to mp3
+function convert_to_mp3() {
+  youtube-dl --extract-audio --audio-format mp3 $1
+}
+
+######################
+#colour man pages
+
+man() {
+    env \
+    LESS_TERMCAP_mb=$(printf "\e[1;36m") \
+    LESS_TERMCAP_md=$(printf "\e[1;36m") \
+    LESS_TERMCAP_me=$(printf "\e[0m") \
+    LESS_TERMCAP_se=$(printf "\e[0m") \
+    LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+    LESS_TERMCAP_ue=$(printf "\e[0m") \
+    LESS_TERMCAP_us=$(printf "\e[1;33m") \
+    man "$@"
+}
+#########################
+# Creates executable bash script, or just changes modifiers to
+# executable, if file already exists.
+mkexecute() {
+  echo "make File Executable Or Create New Bash Or Python Script"
+  echo ""
+  if [[ ! -f "$1" ]]; then
+    filename=$(basename "$1")
+    extension="${filename##*.}"
+    if [[ "$extension" == "py" ]]; then
+      echo '#!/usr/bin/env python3' >> "$1"
+      echo '#' >> "$1"
+      echo "# Usage: $1 " >> "$1"
+      echo '# ' >> "$1"
+      echo >> "$1"
+      echo 'import sys' >> "$1"
+      echo 'import re' >> "$1"
+      echo >> "$1"
+      echo 'def main():' >> "$1"
+      echo '    ' >> "$1"
+      echo >> "$1"
+      echo "if __name__ == '__main__':" >> "$1"
+      echo '    main()' >> "$1"
+    elif [[ "$extension" == "sh" ]]; then
+      echo '#!/bin/bash' >> "$1"
+      echo '# Shell Script Template' >> "$1"
+      echo "#/ Usage: $1 " >> "$1"
+      echo "#/ Description: " >> "$1"
+      echo "#/ Options: " >> "$1"
+      echo '# ' >> "$1"
+      echo "#Colors" >> "$1"
+      echo "
+normal='\e[0m'
+cyan='\e[0;36m'
+green='\e[0;32m'
+light_green='\e[1;32m'
+white='\e[0;37m'
+yellow='\e[1;49;93m'
+blue='\e[0;34m'
+light_blue='\e[1;34m'
+orange='\e[38;5;166m'
+light_cyan='\e[1;36m'
+red='\e[1;31m' 
+      " >> "$1"
+      echo "function usage() { grep '^#/' "$1" | cut -c4- ; exit 0 ; }" >> "$1"
+      echo >> "$1"
+      echo "# Logging Functions to log what happend in the script [It's recommended]" >> "$1"
+      echo "" >> "$1"
+      echo "readonly LOG_FILE=\"/tmp/\$(basename \"\$0\").log\"" >> "$1"
+      echo "
+    info()    { echo -e \"\$light_cyan[INFO]\$white \$*\$normal\" | tee -a \"\$LOG_FILE\" >&2 ; }
+    warning() { echo -e \"\$yellow[WARNING]\$white \$*\$normal\" | tee -a \"\$LOG_FILE\" >&2 ; }
+    error()   { echo -e \"\$red[ERROR]\$white \$*\$normal\" | tee -a \"\$LOG_FILE\" >&2 ; }
+    fatal()   { echo -e \"\$orange[FATAL]\$white \$*\$normal\" | tee -a \"\$LOG_FILE\" >&2 ; exit 1 ; }
+      
+      " >> "$1"
+      echo '# Stops execution if any command fails.' >> "$1"
+      echo 'set -eo pipefail' >> "$1"
+      
+      echo >> "$1"
+      echo "function cleanup() {" >> "$1"
+      echo "  # Remove temporary files
+    # Restart services
+    # ..." >> "$1"
+      echo "  echo \"\"" >> "$1"
+      echo "}" >> "$1"
+      echo >> "$1"
+      echo 'function main() {'>> "$1"
+      echo "  if [[ \$1 = \"--help\" ]]" >> "$1" 
+      echo "	then" >> "$1"
+      echo '    expr "$*" : ".*--help" > /dev/null && usage'>> "$1"
+      echo '	else' >> "$1"
+      echo '    # Some Code Here'   >> "$1"
+      echo "    echo \"some code here\"" >> "$1"
+      echo "  fi" >> "$1"
+      echo "" >> "$1"
+      echo "#trap command make sure the cleanup function run to clean any miss created by the script" >> "$1"
+      echo >> "$1"
+      echo "trap cleanup EXIT" >> "$1"
+      echo >> "$1"
+      echo '}'>> "$1"
+      echo >> "$1"
+      echo "#This test is used to execute the main code only when the script is executed directly, not sourced" >> "$1"
+      echo "
+if [[ \"\${BASH_SOURCE[0]}\" = \"\$0\" ]]; then
+    # Main code of the script
+      " >> "$1"
+      echo 'main "$@"'>> "$1"
+       echo "
+      info  this is information
+      warning  this is warning
+      error  this is Error
+      fatal  this is Fatal
+      " >> "$1"
+      echo "fi" >> "$1"
+      echo "" >> "$1"
+      echo "" >> "$1"
+    else
+      echo "To give executable permissions To exist file: mkexecute <path/file_name>.<py|sh>"
+      echo "To Create new executable: mkexecute <file_name>.<py|sh>"
+    fi
+  fi
+  if [[ ! -z "$1" ]]; then
+  chmod u+x "$@"
+  else
+  true
+  fi           
+}
+#####################3
+# Displays wireless networks in range.
+wirelessNetworksInRange() {
+ sudo iwlist wlp2s0 scan \
+    | grep Quality -A2 \
+    | tr -d "\n" \
+    | sed 's/--/\n/g' \
+    | sed -e 's/ \+/ /g' \
+    | sort -r \
+    | sed 's/ Quality=//g' \
+    | sed 's/\/70 Signal level=-[0-9]* dBm Encryption key:/ /g' \
+    | sed 's/ ESSID:/ /g'
+}
+
+#   usage: disk usage per directory, in Mac OS X and Linux
+#   -------------------------------------------------------------------
+    usage () {
+
+      if [ "$(uname)" = "Darwin" ]; then
+        if [ -n "$1" ]; then
+          du -hd 1 "$1"
+        else
+          du -hd 1
+        fi
+      elif [ "$(uname)" = "Linux" ]; then
+        if [ -n "$1" ]; then
+          du -h --max-depth=1 "$1"
+        else
+          du -h --max-depth=1
+        fi
+      fi
+    }
+
