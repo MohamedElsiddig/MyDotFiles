@@ -69,7 +69,7 @@ function mkarchive(){
 		param   '** Note in 7z 9 considered ultra compression ... the default is 5'" ;;
 				 esac
      	else
-         	echo "about 'Create a compress file form a directory.'
+         	echo "'Create a compress file form a directory.'
 		param '1: The Compress Method [ zip | tgz | tar | bz2 | 7z | zstd]'
 		param '2: The output file name'
 		param '3: The Directory to compress'
