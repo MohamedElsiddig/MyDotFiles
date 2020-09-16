@@ -321,3 +321,28 @@ function committer() {
    # [ $? -eq 0 ] &&
      bash -c "git push --no-verify -q &"
 }
+
+# converts and saves youtube video to mp3
+function convert_to_mp3() {
+
+	if [[ -z $1 ]]
+		then
+			echo "'converts and saves youtube video to mp3.'
+	param '1: The URL of youtube video.'
+	example '$ convert_to_mp3 URL'"
+		else
+			youtube-dl --extract-audio --audio-format mp3 $1
+	fi
+}
+
+function playlist_download() {
+
+	if [[ -z $1 ]]
+		then
+			echo "'Download and saves youtube playlists.'
+	param '1: The URL of youtube video.'
+	example '$ playlist_download URL'"
+		else
+			youtube-dl -i -f mp4 --yes-playlist $1
+	fi
+}
