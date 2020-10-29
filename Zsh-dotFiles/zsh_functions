@@ -4,22 +4,27 @@ SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
 
 function extract() {
- if [ -z "$1" ]; then
+
+
+		if [ -z "$1" ]; then
     # display usage if no parameters given
-    echo "Usage: extract <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>"
-    echo "       extract <path/file_name_1.ext> [path/file_name_2.ext] [path/file_name_3.ext]"
+        
+        echo "'Extract most known archives with one command .'
+		param '1: The file name you want to extract'
+		example '$ extract <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>'
+		example '$ extract <path/file_name_1.ext> [path/file_name_2.ext] [path/file_name_3.ext]'"
  else
     for n in "$@"
     do
       if [ -f "$n" ] ; then
           case "${n%,}" in
-            *.cbt|*.tar.bz2|*.tar.gz|*.tar.xz|*.tbz2|*.tgz|*.txz|*.tar) 
+            *.cbt|*.tar.bz2|*.tar.gz|*.tar.xz|*.tar.zst|*.tbz2|*.tgz|*.txz|*.tar) 
                          tar xvf "$n"       ;;
             *.lzma)      unlzma "$n"      ;;
             *.bz2)       bunzip2 "$n"     ;;
             *.cbr|*.rar)       unrar x -ad "$n" ;;
             *.gz)        gunzip "$n"      ;;
-            *.cbz|*.epub|*.zip)       unzip "$n"       ;;
+            *.cbz|*.epub|*.zip|*.apk|*.xapk)       unzip "$n" -d "${n:0:-4}"    ;;
             *.z)         uncompress "$n"  ;;
             *.7z|*.arj|*.cab|*.cb7|*.chm|*.deb|*.dmg|*.iso|*.lzh|*.msi|*.pkg|*.rpm|*.udf|*.wim|*.xar)
                          7z x "$n"        ;;
@@ -43,19 +48,38 @@ fi
 IFS=$SAVEIFS
 
 function mkarchive(){
+		
 	if [[ ! -z $1 ]]
 		then
 			case $1 in
 				  bz2)	tar  cvjf  "$2.tar.bz2" -C "$3" . ;;
 				  tgz)	tar cvzf   "$2.tar.gz" -C "$3" .  ;;
-				  tar)	tar cvf	    "$2.tar"   -C "$3" .  ;;
-				  *)    echo "Usage mkarchive Archive-Type [ bz2 | tgz | tar ]  Archive-Name  Target-Directory to Archive ..." ;;
+				  zstd)	tar --zstd  -cvf "$2.tar.zst" -C "$3" .  ;;
+				  tar)	tar cvf    "$2.tar"   -C "$3" .  ;;
+				  zip)	zip -r "$2".zip "$3" ;;
+				   7z)  7z a -mx=$2 "$3".7z $4 ;;
+				  *)   echo "'Create a compress file form a directory.'
+		param '1: The Compress Method [ zip | tgz | tar | bz2 | 7z | zstd]'
+		param '2: The output file name'
+		param '3: The Directory to compress'
+		example '$ mkarchive zip Shell-scripts ~/Docuoments/Shell-scripts'
+		example '$ mkarchive tgz Shell-scripts ~/Docuoments/Shell-scripts'
+		param '** In the 7z method choose the compression level'
+		example '$ mkarchive 7z [ 1 | 3 | 5 | 7 | 9 ] Shell-scripts ~/Docuoments/Shell-scripts'
+		param   '** Note in 7z 9 considered ultra compression ... the default is 5'" ;;
 				 esac
      	else
-         	echo "Usage mkarchive Archive-Type [ bz2 | tgz | tar ]  Archive-Name  Target-Directory to Archive ..."
+         	echo "'Create a compress file form a directory.'
+		param '1: The Compress Method [ zip | tgz | tar | bz2 | 7z | zstd]'
+		param '2: The output file name'
+		param '3: The Directory to compress'
+		example '$ mkarchive zip Shell-scripts ~/Docuoments/Shell-scripts'
+		example '$ mkarchive tgz Shell-scripts ~/Docuoments/Shell-scripts'
+                '** In the 7z method choose the compression level'
+		example '$ mkarchive 7z [ 1 | 3 | 5 | 7 | 9 ] Shell-scripts ~/Docuoments/Shell-scripts'
+		'** Note in 7z 9 considered ultra compression ... the default is 5'"
      fi	
 }
-
 ############################
 
 
@@ -265,3 +289,245 @@ wirelessNetworksInRange() {
     | sed 's/ ESSID:/ /g'
 }
 
+#   usage: disk usage per directory, in Mac OS X and Linux
+#   -------------------------------------------------------------------
+    usage () {
+
+      if [ "$(uname)" = "Darwin" ]; then
+        if [ -n "$1" ]; then
+          du -hd 1 "$1"
+        else
+          du -hd 1
+        fi
+      elif [ "$(uname)" = "Linux" ]; then
+        if [ -n "$1" ]; then
+          du -h --max-depth=1 "$1"
+        else
+          du -h --max-depth=1
+        fi
+      fi
+    }
+function commiter() {
+    # Add file(s), commit and push
+    FILE=$(git status | $($commands[grep]) "modified:" | cut -f2 -d ":" | xargs)
+    for file in $FILE; do git add -f "$file"; done
+    if [ "$1" == "" ]; then
+        # SignOff by username & email, SignOff with PGP and ignore hooks
+        git commit -m"Updated $FILE";
+    else
+        git commit -m"$2";
+    fi;
+   # read -t 5 -p "Hit ENTER if you want to push else wait 5 seconds"
+   # [ $? -eq 0 ] &&
+     bash -c "git push --no-verify -q &"
+}
+
+# converts and saves youtube video to mp3
+function convert_to_mp3() {
+
+	if [[ -z $1 ]]
+		then
+			echo "'converts and saves youtube video to mp3.'
+	param '1: The URL of youtube video.'
+	example '$ convert_to_mp3 URL'"
+		else
+			youtube-dl --extract-audio --audio-format mp3 $1
+	fi
+}
+
+function playlist_download() {
+
+	if [[ -z $1 ]]
+		then
+			echo "'Download and saves youtube playlists.'
+	param '1: The URL of youtube video.'
+	example '$ playlist_download URL'"
+		else
+			youtube-dl -i -f mp4 --yes-playlist $1
+	fi
+}
+
+#_______________________________________________
+
+
+
+function git-switch(){
+
+colorize_remotes() {
+    perl -pe 's|^(remotes/.*)$|\033[36m$1\033[m|g'
+}
+
+remove_color() {
+    perl -pe 's/\e\[?.*?[\@-~]//g'
+}
+
+unique() {
+    if [[ -n $1 ]] && [[ -f $1 ]]; then
+        cat "$1"
+    else
+        cat <&0
+    fi | awk '!a[$0]++' 2>/dev/null
+}
+
+reverse() {
+    if [[ -n $1 ]] && [[ -f $1 ]]; then
+        cat "$1"
+    else
+        cat <&0
+    fi | awk '
+        {
+            line[NR] = $0
+        }
+        
+        END {
+            for (i = NR; i > 0; i--) {
+                print line[i]
+            }
+        }' 2>/dev/null
+}
+
+get_filter() {
+    local x candidates
+
+    if [[ -z $1 ]]; then
+        return 1
+    fi
+
+    # candidates should be list like "a:b:c" concatenated by a colon
+    candidates="$1:"
+
+    while [[ -n $candidates ]]
+    do
+        # the first remaining entry
+        x=${candidates%%:*}
+        # reset candidates
+        candidates=${candidates#*:}
+
+        if type "${x%% *}" &>/dev/null; then
+            echo "$x"
+            return 0
+        else
+            continue
+        fi
+    done
+
+    return 1
+}
+
+# If you are not in a git repository, the script ends here
+git_root_dir="$(git rev-parse --show-toplevel)"
+current_branch="$(git rev-parse --abbrev-ref HEAD)"
+
+GIT_FILTER=${GIT_FILTER:-fzy:fzf-tmux:fzf:peco}
+
+filter="$(get_filter "$GIT_FILTER")"
+if [[ -z $filter ]]; then
+    echo "No available filter in \$GIT_FILTER" >&2
+    return 1
+fi
+
+logfile="$git_root_dir/.git/logs/switch.log"
+post_script="$git_root_dir/.git/hooks/post-checkout"
+
+if [[ ! -x $post_script ]]; then
+    cat <<HOOK >|"$post_script"
+git rev-parse --abbrev-ref HEAD >>$logfile
+HOOK
+    chmod 755 "$post_script"
+fi
+
+if [[ ! -f $logfile ]]; then
+    touch "$logfile"
+fi
+
+candidates="$(
+{
+    cat "$logfile" \
+        | reverse \
+        | unique
+    git branch -a --no-color \
+        | cut -c3-
+} \
+    | unique \
+    | colorize_remotes \
+    | grep -v "HEAD" \
+    | grep -v "$current_branch" || true
+    # ^ if the candidates is empty, grep return false
+)"
+
+if [[ -z $candidates ]]; then
+    echo "No available branches to be checkouted" >&2
+    return 1
+fi
+
+selected_branch="$(echo "$candidates" | $filter | remove_color)"
+if [[ -z $selected_branch ]]; then
+    return 0
+fi
+
+git checkout "$selected_branch"
+return $?
+}
+
+################################################
+
+
+function git-open(){
+# Figure out github repo base URL
+base_url=$(git config --get remote.origin.url)
+base_url=${base_url%\.git} # remove .git from end of string
+
+# Fix git@github.com: URLs
+base_url=${base_url//git@github\.com:/https:\/\/github\.com\/}
+
+# Fix git://github.com URLS
+base_url=${base_url//git:\/\/github\.com/https:\/\/github\.com\/}
+
+# Fix git@bitbucket.org: URLs
+base_url=${base_url//git@bitbucket.org:/https:\/\/bitbucket\.org\/}
+
+# Fix git@gitlab.com: URLs
+base_url=${base_url//git@gitlab\.com:/https:\/\/gitlab\.com\/}
+
+# Validate that this folder is a git folder
+git branch 2>/dev/null 1>&2
+if [ $? -ne 0 ]; then
+  echo Not a git repo!
+  return $?
+fi
+
+# Find current directory relative to .git parent
+full_path=$(pwd)
+git_base_path=$(cd ./$(git rev-parse --show-cdup); pwd)
+relative_path=${full_path#$git_base_path} # remove leading git_base_path from working directory
+
+# If filename argument is present, append it
+if [ "$1" ]; then
+  relative_path="$relative_path/$1"
+fi
+
+# Figure out current git branch
+# git_where=$(command git symbolic-ref -q HEAD || command git name-rev --name-only --no-undefined --always HEAD) 2>/dev/null
+git_where=$(command git name-rev --name-only --no-undefined --always HEAD) 2>/dev/null
+
+# Remove cruft from branchname
+branch="${git_where#refs\/heads\/}"
+branch="${branch#tags\/}"
+branch="${branch%^0}"
+
+[[ $base_url == *bitbucket* ]] && tree="src" || tree="tree"
+url="$base_url/$tree/$branch$relative_path"
+
+echo "$url"
+
+# Check for various OS openers. Quit as soon as we find one that works.
+# Don't assume this will work, provide a helpful diagnostic if it fails.
+for opener in xdg-open open cygstart "start"; {
+  if command -v $opener; then
+    open=$opener;
+    break;
+  fi
+}
+
+$open "$url" || (echo "Unrecognized OS: Expected to find one of the following launch commands: xdg-open, open, cygstart, start" && return 1);
+}
