@@ -10,6 +10,7 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 
 "Plugin 'maralla/completor.vim'
+Plugin 'ervandew/supertab'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'hzchirs/vim-material'
 Plugin 'ryanoasis/vim-devicons'
